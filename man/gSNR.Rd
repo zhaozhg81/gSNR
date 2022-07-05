@@ -6,6 +6,7 @@ gSNR
 %%  ~~function to do ... ~~
 }
 \description{
+  This function calcualte the generalized signal-to-noise ratio.
 %%  ~~ A concise (1-5 lines) description of what the function does. ~~
 }
 \usage{
@@ -58,34 +59,40 @@ gSNR(X, Y, H = NA, discrete = FALSE, pvalue = FALSE, perm = 1000)
 %% ~~objects to See Also as \code{\link{help}}, ~~~
 }
 \examples{
-##---- Should be DIRECTLY executable !! ----
-##-- ==>  Define data, use random,
-##--	or do  help(data=index)  for the standard data sets.
+library(gSNR)
 
-## The function is currently defined as
-function (X, Y, H = NA, discrete = FALSE, pvalue = FALSE, perm = 1000) 
-{
-    p <- dim(X)[2]
-    n <- dim(X)[1]
-    if (is.na(H)) {
-        H <- floor(sqrt(n))
-    }
-    if (pvalue == FALSE) {
-        psi_1 <- SIR(X, Y, H, discrete)$lambda
-        res <- list(stat = psi_1, pvalue = NA, null.dist = NA)
-    }
-    else {
-        psi_1 <- SIR(X, Y, H, discrete)$lambda
-        psi_1.perm <- array(0, perm)
-        for (no.perm in 1:perm) {
-            Y.perm <- sample(Y, n, replace = FALSE)
-            psi_1.perm[no.perm] <- SIR(X, Y.perm, H, discrete)$lambda
-        }
-        pvalue <- mean(psi_1 < psi_1.perm)
-        res <- list(stat = psi_1, pvalue = pvalue, null.dist = psi_1.perm)
-    }
-    res
-  }
+n <- 1000
+H <- 20
+m <- n/H
+sigma <- 1
+
+p <- 20
+
+set.seed(2)
+D <- 1
+
+
+beta <- array(0, c(p, D) )
+beta <- rnorm(p, 0, 1)
+
+
+X <- matrix( rnorm(p*n), c(n, p) )
+
+
+Z <- X%*% beta
+Y <-  sin(Z[,1])*exp(Z[,1])*0.2 + sigma*rnorm(n,0,1)
+
+
+res <- gSNR( X, Y, discrete=FALSE, pvalue=TRUE)
+
+ORD <- order(Y)
+Y2 <- array(0, n)
+Y2[ ORD[1:floor(n/3)] ] <- 1
+Y2[ ORD[ (floor(n/3)+1):floor(2*n/3)] ] <- 2
+Y2[ ORD[ (floor(2*n/3)+1):n] ] <- 3
+  
+res.2 <- gSNR( X, Y2, discrete=TRUE, pvalue=TRUE)
+
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory (show via RShowDoc("KEYWORDS")):
