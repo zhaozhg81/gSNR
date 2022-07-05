@@ -1,3 +1,5 @@
+source("gSNR.R")
+source("SIR.R")
 
 n <- 1000
 H <- 20

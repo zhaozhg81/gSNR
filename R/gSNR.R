@@ -1,4 +1,3 @@
-
 gSNR <- function( X, Y, H=NA, discrete=FALSE, pvalue=FALSE, perm=1000)
 {
   p <- dim(X)[2]
