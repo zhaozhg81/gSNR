@@ -1,1 +1,1 @@
-export("gSNR", "SIR")
+export("gSNR", "SIR", "gSNR_Covariate")

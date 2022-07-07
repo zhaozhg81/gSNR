@@ -19,8 +19,8 @@ function( X, Y, H=NA, discrete=FALSE, pvalue=FALSE, perm=1000)
     psi_1.perm <- array(0, perm)
     for( no.perm in 1:perm )
       {
-        perm.ind <- sample(c(1:n), n, replace=FALSE)
-        psi_1.perm[no.perm] <- SIR( X[perm.ind,], Y, H, discrete)$lambda
+        Y.perm <- sample(Y, n, replace=FALSE)
+        psi_1.perm[no.perm] <- SIR( X, Y.perm, H, discrete)$lambda
       }
 
     pvalue <- mean( psi_1 < psi_1.perm )
